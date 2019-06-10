@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+var QRCode = require('qrcode.react')
 
-function App() {
+function Result({ url }) {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <QRCode size={256} renderAs="svg" value={url} />
+        <p>{url}</p>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+function Main({ match }) {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>{JSON.stringify(match)}</p>
+        <p>Add the URL you wish to encode to the address.</p>
+        <p>
+          <i>
+            e.g.
+            <a href="?url=http://bbc.co.uk">
+              https://qr.lab.io?url=http://bbc.co.uk
+            </a>
+          </i>
+        </p>
+      </header>
+    </div>
+  )
+}
+
+function App({ match }) {
+  let params = new URLSearchParams(window.location.search)
+  let url = params.get('url')
+
+  if (url) {
+    return <Result url={url} />
+  } else {
+    return <Main />
+  }
+}
+
+export default App
